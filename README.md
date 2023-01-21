@@ -3,7 +3,7 @@ A Python Notebook which generates a counterclockwise spiral grid of images.
 The motivation behind the program is combine all memorable images into one image. For eg., one wanted to combine their favourite moment from each anime they have watched into a grid. 
 
 A limitation is that all images need to be of same dimensions. This can be fixed by resizing but I have left that work open.
-
+	
 ## Working
 
 - It concatenates all the images vertically and horizontally according to a spiral grid.
@@ -17,9 +17,9 @@ A limitation is that all images need to be of same dimensions. This can be fixed
 
 - A folder containing all required images in `png` format.
 
-- A `Names.txt` file which contains the corresponding image names say, of anime on each line (preferably sorted). Only the image names contained here will be used. [Example file](Example/Names.txt)
+- A `image_names.txt` file which contains the corresponding image names say, of anime on each line (preferably sorted). Only the image names contained here will be used. [Example file](Example/image_names.txt)
 
-- A `Complete_names.txt` which maps image names to anime names (can be in any order) in the format `<image_name> | <anime_name>`. [Example file](Example/Complete_names.txt)
+- A `image_captions.txt` which maps image names to anime names (can be in any order) in the format `<image_name> | <anime_name>`. [Example file](Example/image_captions.txt)
 
 - A directory specifying the destination of generated files.
 
