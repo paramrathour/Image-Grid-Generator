@@ -2,6 +2,8 @@ A Python Notebook which generates a counterclockwise spiral grid of images.
 
 The motivation behind the program is combine all memorable images into one image. For eg., one wanted to combine their favourite moment from each anime they have watched into a grid. 
 
+A limitation is that all images need to be of same dimensions. This can be fixed by resizing but I have left that work open.
+
 ## Working
 
 - It concatenates all the images vertically and horizontally according to a spiral grid.
