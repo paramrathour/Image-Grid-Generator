@@ -1,0 +1,16 @@
+0  | Mandelbrot Set
+1  | Head and Shoulder
+2  | Seahorse Valley
+3  | Seahorse
+4  | Seahorse Tail
+5  | Tail Part
+6  | Double_Hook
+7  | Satellite
+8  | Satellite Antenna
+9  | Satellite Head and Shoulder
+10 | Satellite Seahorse Valley
+11 | Satellite Double Spiral
+12 | Satellite Spirally Wheel with Julia Islands
+13 | Satellite Seahorse Tail with Julia Island
+14 | Satellite Julia Island
+15 | One Island

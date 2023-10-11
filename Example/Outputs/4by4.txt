@@ -1,0 +1,5 @@
+From Left to Right, Top to Bottom
+Mandelbrot Set, Head and Shoulder, Seahorse Valley, Seahorse
+Satellite, Double_Hook, Tail Part, Seahorse Tail
+Satellite Antenna, Satellite Head and Shoulder, Satellite Seahorse Valley, Satellite Double Spiral
+One Island, Satellite Julia Island, Satellite Seahorse Tail with Julia Island, Satellite Spirally Wheel with Julia Islands
