@@ -2,7 +2,7 @@ A Python Script which generates a grid of images. It also accounts for the order
 
 The motivation behind this project is to combine all memorable images into one image while also exploiting their order of importance. For eg., this is useful when one wants to combine their favourite moment from each anime they have watched into a grid and they also want to arrange these pictures considering the amount of personal impact.
 
-![example anime grid](https://raw.githubusercontent.com/paramrathour/website-assets/main/anime-grid.jpg)
+![example anime grid](https://paramrathour.github.io/website-assets/anime-grid-favourite.jpg)
 
 ## Working
 - It concatenates all the images vertically and horizontally to form a square grid of appropriate size. If a square grid is not possible then we fill empty places with blank images.
