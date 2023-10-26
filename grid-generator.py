@@ -1,15 +1,11 @@
-import os, os.path
+import os, argparse, math, csv
 import numpy as np
-import argparse as ap
-import math
-import csv
 import cv2
 
-parser = ap.ArgumentParser()
+parser = argparse.ArgumentParser()
 parser.add_argument("--image-source")
-parser.add_argument("--image-names") # A file which contains the corresponding image names of anime on each line (preferably sorted)
-parser.add_argument("--image-captions") # Mapping image names to anime names (can be in any order).
-# File Format "<image_name> | <anime_name>", where "|" character is used as seperator as image_name is a file name which can't contain "|"
+parser.add_argument("--image-names")
+parser.add_argument("--image-captions")
 parser.add_argument("--image-destination")
 parser.add_argument("--image-dimension")
 parser.add_argument("--grid-dimension") 
@@ -53,20 +49,21 @@ def parse_arguments(arguments):
 
     image_dimension = image_dimension.split()
     image_dimension = (int(image_dimension[0]), int(image_dimension[1]))
-    if grid_dimension == None:
+    if grid_dimension is None:
         scale = int(math.floor(math.sqrt(number_of_pixels/(image_dimension[0]*image_dimension[1]))))
-        scale += (scale == 0)
+        if scale == 0:
+            scale += 1
         grid_dimension = (scale * image_dimension[0], scale * image_dimension[1]);
     else:
         grid_dimension = grid_dimension.split()
         grid_dimension = (int(grid_dimension[0]), int(grid_dimension[1]))
         
-    if top_left_pixel !=  None:
+    if top_left_pixel is not  None:
         top_left_pixel = top_left_pixel.split()
         top_left_pixel = (int(top_left_pixel[0]), int(top_left_pixel[1]))
     else:
         top_left_pixel = (0, 0)
-    if bottom_right_pixel !=  None:
+    if bottom_right_pixel is not  None:
         bottom_right_pixel = bottom_right_pixel.split()
         bottom_right_pixel = (int(bottom_right_pixel[0])+1, int(bottom_right_pixel[1])+1)
     else:
@@ -77,7 +74,7 @@ def parse_arguments(arguments):
 
     names_all = []
 
-    # Blank Image (to be put if number of images is not a squares)
+    # Blank Image (to be put if total number of images is not a square)
     blank = "_"
     captions_all = {blank:blank}
     blank_image = np.zeros([image_dimension[1],image_dimension[0],image_depth], dtype = np.uint8)
@@ -122,12 +119,11 @@ def generate_grid(n, grid_type, invert_chirality):
         up    = lambda x, y: (x-1, y)
         down  = lambda x, y: (x+1, y)
         direction_mapping = {0:right, 1:up, 2:left, 3:down}
-        # sign_factor = 1-2*invert_chirality
+        find_direction = lambda x, invert_chirality:(x+2*invert_chirality)%4 if x%2 == 0 else x%4
         counter = counter + 1
-        x = (n)//2
+        x = n//2
         y = (n-1+invert_chirality)//2
         i = 0
-        find_direction = lambda x, invert_chirality:(x+2*invert_chirality)%4 if x%2 == 0 else x%4
         while (counter < n*n):
             repeat = (i//2)+1
             for z in range(repeat):
