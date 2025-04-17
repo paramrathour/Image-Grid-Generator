@@ -99,7 +99,7 @@ def parse_arguments(arguments):
         n = int(grid_size)
 
     image_input_extension = ['png', 'jpg', 'jpeg']
-    return n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size
+    return n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth, save_png, save_jpg, force_odd_size
 
 def get_names(i, names, blank):
     if i < len(names):
@@ -160,7 +160,7 @@ def get_grid(i,j, grid, names):
 def crop(image, top_left_pixel, bottom_right_pixel):
     return image[top_left_pixel[0]:bottom_right_pixel[0], top_left_pixel[1]:bottom_right_pixel[1]]
 
-def find_image(i, j, grid, names, image_source, image_status, blank, blank_image, image_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images):
+def find_image(i, j, grid, names, image_source, image_status, blank, blank_image, image_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth):
     path = image_source + get_names(get_grid(i, j, grid, names), names, blank)
     files = [path + '.' +  extension for extension in image_input_extension]
     check = [os.path.isfile(file) for file in files]
@@ -171,7 +171,11 @@ def find_image(i, j, grid, names, image_source, image_status, blank, blank_image
         file = files[file]
         image = (cv2.imread(file, cv2.IMREAD_GRAYSCALE) if grayscale_images else cv2.imread(file, cv2.IMREAD_COLOR))
         image_status[i][j] = 1
-    image = cv2.resize(image, image_dimension, interpolation = cv2.INTER_CUBIC)
+
+    if image.size / image_depth > math.prod(image_dimension):
+        image = cv2.resize(image, image_dimension, interpolation = cv2.INTER_AREA)
+    else:
+        image = cv2.resize(image, image_dimension, interpolation = cv2.INTER_CUBIC)
     image = crop(image, top_left_pixel, bottom_right_pixel)
     return image
 
@@ -191,12 +195,12 @@ def generate_caption(n, names, captions_all, grid, image_status, blank, image_de
     with open(image_destination + ".txt", 'w') as file:
         file.write(string)
 
-def generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size):
+def generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth, save_png, save_jpg, force_odd_size):
     n = 2*n//2 + 1 if force_odd_size else n # To make sure n is odd 
     names = names_all[:n*n]
     grid, image_status = generate_grid(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right)
     image_destination +=  str(n) + "by" + str(n)
-    image_grid = [[find_image(i, j, grid, names, image_source, image_status, blank, blank_image, image_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images) for j in range(n)] for i in range(n)]
+    image_grid = [[find_image(i, j, grid, names, image_source, image_status, blank, blank_image, image_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth) for j in range(n)] for i in range(n)]
     output = concatenate_images(image_grid)
     image_compressed = cv2.resize(output, grid_dimension, interpolation = cv2.INTER_CUBIC)
     if save_jpg:
@@ -207,5 +211,5 @@ def generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_u
         cv2.imwrite(image_destination + '_compressed.' + 'png', image_compressed)
     generate_caption(n, names, captions_all, grid, image_status, blank, image_destination)
 
-n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size = parse_arguments(arguments)    
-generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size)
+n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth, save_png, save_jpg, force_odd_size = parse_arguments(arguments)    
+generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, image_depth, save_png, save_jpg, force_odd_size)
