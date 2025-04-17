@@ -46,6 +46,8 @@ This generates `jpg` images of the resultant horizontal snake-like grid pattern,
     --force-odd-size             Pass if desired grid dimension is odd, will keep the first ordered
     --grayscale-images           Pass if images are grayscale
     --invert-chirality           Pass if a grid with inverse chirality is required
+    --grid-flip-up-down          Pass if a vertically flipped grid is required
+    --grid-flip-left-right       Pass if a horizontally flipped grid is required
     --save-png                   Pass if desired output image extension is 'png'
     --save-jpg                   Pass if desired output image extension is 'jpg'
     --black-blank-image          Pass if desired blank images are required to be all black

@@ -14,6 +14,8 @@ parser.add_argument("--force-odd-size", action = 'store_true')
 parser.add_argument("--grid-type")
 parser.add_argument("--grayscale-images", action = 'store_true')
 parser.add_argument("--invert-chirality", action = 'store_true')
+parser.add_argument("--grid-flip-up-down", action = 'store_true')
+parser.add_argument("--grid-flip-left-right", action = 'store_true')
 parser.add_argument("--save-png", action = 'store_true')
 parser.add_argument("--save-jpg", action = 'store_true')
 parser.add_argument("--black-blank-image", action = 'store_true')
@@ -36,7 +38,9 @@ def parse_arguments(arguments):
     force_odd_size = bool(arguments.force_odd_size)
     black_blank_image = bool(arguments.black_blank_image)
     grid_type = arguments.grid_type
-    invert_chirality = bool(arguments.invert_chirality) 
+    invert_chirality = bool(arguments.invert_chirality)
+    grid_flip_up_down = bool(arguments.grid_flip_up_down)
+    grid_flip_left_right = bool(arguments.grid_flip_left_right)
     top_left_pixel = arguments.top_left_pixel
     bottom_right_pixel = arguments.bottom_right_pixel
 
@@ -95,7 +99,7 @@ def parse_arguments(arguments):
         n = int(grid_size)
 
     image_input_extension = ['png', 'jpg', 'jpeg']
-    return n, grid_type, invert_chirality, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size
+    return n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size
 
 def get_names(i, names, blank):
     if i < len(names):
@@ -108,7 +112,7 @@ def updateGrid(grid, x, y, counter,n):
         grid[x][y] = counter
     return counter+1
 
-def generate_grid(n, grid_type, invert_chirality):
+def generate_grid(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right):
 
     grid = np.zeros((n,n),dtype = int)
     image_status = np.zeros((n,n),dtype = int)
@@ -141,6 +145,10 @@ def generate_grid(n, grid_type, invert_chirality):
             grid = np.array([flip_even_rows(i,row) for i, row in enumerate(grid)])
         if invert_chirality:
             grid = grid.transpose();
+    if grid_flip_up_down:
+        grid = np.flipud(grid)
+    if grid_flip_left_right:
+        grid = np.fliplr(grid)
     return grid, image_status
 
 def get_grid(i,j, grid, names):
@@ -183,10 +191,10 @@ def generate_caption(n, names, captions_all, grid, image_status, blank, image_de
     with open(image_destination + ".txt", 'w') as file:
         file.write(string)
 
-def generate_image_grid_with_caption(n, grid_type, invert_chirality, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size):
+def generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size):
     n = 2*n//2 + 1 if force_odd_size else n # To make sure n is odd 
     names = names_all[:n*n]
-    grid, image_status = generate_grid(n, grid_type, invert_chirality)
+    grid, image_status = generate_grid(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right)
     image_destination +=  str(n) + "by" + str(n)
     image_grid = [[find_image(i, j, grid, names, image_source, image_status, blank, blank_image, image_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images) for j in range(n)] for i in range(n)]
     output = concatenate_images(image_grid)
@@ -199,5 +207,5 @@ def generate_image_grid_with_caption(n, grid_type, invert_chirality, captions_al
         cv2.imwrite(image_destination + '_compressed.' + 'png', image_compressed)
     generate_caption(n, names, captions_all, grid, image_status, blank, image_destination)
 
-n, grid_type, invert_chirality, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size = parse_arguments(arguments)    
-generate_image_grid_with_caption(n, grid_type, invert_chirality, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size)
+n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size = parse_arguments(arguments)    
+generate_image_grid_with_caption(n, grid_type, invert_chirality, grid_flip_up_down, grid_flip_left_right, captions_all, names_all, blank, blank_image, image_source, image_destination, image_dimension, grid_dimension, top_left_pixel, bottom_right_pixel, image_input_extension, grayscale_images, save_png, save_jpg, force_odd_size)
