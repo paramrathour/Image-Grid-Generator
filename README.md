@@ -44,6 +44,7 @@ This generates `jpg` images of the resultant horizontal snake-like grid pattern,
     --grid-dimension             Integer Pair: <grid-width grid-height> for the compressed images
     --grid-size                  Integer: size of image grid (n images by n images)
     --force-odd-size             Pass if desired grid dimension is odd, will keep the first ordered
+                                 image exactly at center in case of a spiral grid
     --grayscale-images           Pass if images are grayscale
     --invert-chirality           Pass if a grid with inverse chirality is required
     --grid-flip-up-down          Pass if a vertically flipped grid is required
@@ -51,7 +52,6 @@ This generates `jpg` images of the resultant horizontal snake-like grid pattern,
     --save-png                   Pass if desired output image extension is 'png'
     --save-jpg                   Pass if desired output image extension is 'jpg'
     --black-blank-image          Pass if desired blank images are required to be all black
-                                 image exactly at center in case of a spiral grid
 
 For image cropping (0-based-indexing of pixel coordinates)
 
